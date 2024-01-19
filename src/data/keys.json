@@ -1,0 +1,112 @@
+{
+  "row1": [
+    {
+      "char": "Q",
+      "code": "81"
+    },
+    {
+      "char": "W",
+      "code": "87"
+    },
+    {
+      "char": "E",
+      "code": "69"
+    },
+    {
+      "char": "R",
+      "code": "82"
+    },
+    {
+      "char": "T",
+      "code": "84"
+    },
+    {
+      "char": "Y",
+      "code": "89"
+    },
+    {
+      "char": "U",
+      "code": "85"
+    },
+    {
+      "char": "I",
+      "code": "73"
+    },
+    {
+      "char": "O",
+      "code": "79"
+    },
+    {
+      "char": "P",
+      "code": "80"
+    }
+  ],
+  "row2": [
+    {
+      "char": "A",
+      "code": "65"
+    },
+    {
+      "char": "S",
+      "code": "83"
+    },
+    {
+      "char": "D",
+      "code": "68"
+    },
+    {
+      "char": "F",
+      "code": "70"
+    },
+    {
+      "char": "G",
+      "code": "71"
+    },
+    {
+      "char": "H",
+      "code": "72"
+    },
+    {
+      "char": "J",
+      "code": "74"
+    },
+    {
+      "char": "K",
+      "code": "75"
+    },
+    {
+      "char": "L",
+      "code": "76"
+    }
+  ],
+  "row3": [
+    {
+      "char": "Z",
+      "code": "90"
+    },
+    {
+      "char": "X",
+      "code": "88"
+    },
+    {
+      "char": "C",
+      "code": "67"
+    },
+    {
+      "char": "V",
+      "code": "86"
+    },
+    {
+      "char": "B",
+      "code": "66"
+    },
+    {
+      "char": "N",
+      "code": "78"
+    },
+    {
+      "char": "M",
+      "code": "77"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+[
+  { "id": "1", "question": "Capital of France", "answer": "Paris" },
+  { "id": "2", "question": "Largest mammal", "answer": "Whale" },
+  { "id": "3", "question": "Element with symbol 'O'", "answer": "Oxygen" },
+  {
+    "id": "4",
+    "question": "Programming language by Mozilla",
+    "answer": "JavaScript"
+  },
+  { "id": "5", "question": "Earth's natural satellite", "answer": "Moon" },
+  { "id": "6", "question": "Primary color", "answer": "Red" },
+  { "id": "7", "question": "Founder of Microsoft", "answer": "Bill" },
+  { "id": "8", "question": "Insect that produces honey", "answer": "Bee" },
+  { "id": "9", "question": "Mount Everest is located in", "answer": "Nepal" },
+  { "id": "10", "question": "Universal solvent", "answer": "Water" },
+  { "id": "11", "question": "Element with symbol 'Fe'", "answer": "Iron" },
+  { "id": "12", "question": "Largest ocean", "answer": "Pacific" },
+  { "id": "13", "question": "Smallest prime number", "answer": "Two" },
+  {
+    "id": "14",
+    "question": "Greatest common factor of 12 and 18",
+    "answer": "Six"
+  },
+  { "id": "15", "question": "Metal used in making coins", "answer": "Copper" },
+  {
+    "id": "16",
+    "question": "Programming language by Sun Microsystems",
+    "answer": "Java"
+  },
+  { "id": "17", "question": "Element with symbol 'H'", "answer": "Hydrogen" },
+  { "id": "18", "question": "Founder of SpaceX", "answer": "Elon" },
+  { "id": "19", "question": "Insect known for hard work", "answer": "Ant" },
+  {
+    "id": "20",
+    "question": "Smallest planet in our solar system",
+    "answer": "Mercury"
+  },
+  {
+    "id": "21",
+    "question": "Number of continents on Earth",
+    "answer": "Seven"
+  },
+  { "id": "22", "question": "Element with symbol 'C'", "answer": "Carbon" },
+  {
+    "id": "23",
+    "question": "Programming language by Apple",
+    "answer": "Swift"
+  },
+  { "id": "24", "question": "Element with symbol 'N'", "answer": "Nitrogen" },
+  { "id": "25", "question": "Our closest star", "answer": "Sun" },
+  { "id": "26", "question": "The Red Planet", "answer": "Mars" },
+  { "id": "27", "question": "Element with symbol 'K'", "answer": "Potassium" },
+  { "id": "28", "question": "Second-largest ocean", "answer": "Atlantic" },
+  {
+    "id": "29",
+    "question": "Programming language by Google",
+    "answer": "Python"
+  },
+  { "id": "30", "question": "Element with symbol 'P'", "answer": "Phosphorus" },
+  {
+    "id": "31",
+    "question": "Hard outer layer of the Earth",
+    "answer": "Crust"
+  },
+  {
+    "id": "32",
+    "question": "Smallest prime number greater than 10",
+    "answer": "Eleven"
+  },
+  {
+    "id": "33",
+    "question": "Most abundant gas in the Earth's atmosphere",
+    "answer": "Nitrogen"
+  },
+  { "id": "34", "question": "Fourth planet from the Sun", "answer": "Mars" },
+  { "id": "35", "question": "Element with symbol 'S'", "answer": "Sulfur" },
+  { "id": "36", "question": "Founder of Facebook", "answer": "Mark" },
+  { "id": "37", "question": "Element with symbol 'Mg'", "answer": "Magnesium" },
+  {
+    "id": "38",
+    "question": "Programming language by Facebook",
+    "answer": "PHP"
+  },
+  {
+    "id": "39",
+    "question": "The Great Barrier Reef is located in",
+    "answer": "Australia"
+  },
+  { "id": "40", "question": "Metal used in pencils", "answer": "Graphite" },
+  { "id": "41", "question": "Element with symbol 'Si'", "answer": "Silicon" },
+  {
+    "id": "42",
+    "question": "Largest desert in the world",
+    "answer": "Antarctica"
+  },
+  { "id": "43", "question": "Element with symbol 'Ca'", "answer": "Calcium" },
+  {
+    "id": "44",
+    "question": "Programming language by Microsoft",
+    "answer": "C#"
+  },
+  { "id": "45", "question": "Element with symbol 'Ar'", "answer": "Argon" },
+  { "id": "46", "question": "Largest river in the world", "answer": "Amazon" },
+  { "id": "47", "question": "Metal used in batteries", "answer": "Zinc" },
+  { "id": "48", "question": "Element with symbol 'Cl'", "answer": "Chlorine" },
+  {
+    "id": "49",
+    "question": "Programming language by Oracle",
+    "answer": "Java"
+  },
+  { "id": "50", "question": "Largest moon of Saturn", "answer": "Titan" },
+  { "id": "51", "question": "Element with symbol 'Ne'", "answer": "Neon" },
+  {
+    "id": "52",
+    "question": "Programming language by Netflix",
+    "answer": "Java"
+  },
+  { "id": "53", "question": "Element with symbol 'Al'", "answer": "Aluminum" },
+  {
+    "id": "54",
+    "question": "Largest planet in our solar system",
+    "answer": "Jupiter"
+  },
+  { "id": "55", "question": "Metal used in airplanes", "answer": "Aluminum" },
+  { "id": "56", "question": "Element with symbol 'Na'", "answer": "Sodium" },
+  { "id": "57", "question": "Programming language by Google", "answer": "Go" },
+  { "id": "58", "question": "Element with symbol 'G'", "answer": "Gold" },
+  {
+    "id": "59",
+    "question": "Second-largest desert in the world",
+    "answer": "Arabia"
+  },
+  { "id": "60", "question": "Element with symbol 'F'", "answer": "Fluorine" },
+  { "id": "61", "question": "Metal used in coins", "answer": "Copper" },
+  { "id": "62", "question": "Programming language by IBM", "answer": "Cobol" },
+  { "id": "63", "question": "Element with symbol 'Cu'", "answer": "Copper" },
+  {
+    "id": "64",
+    "question": "Largest island in the world",
+    "answer": "Greenland"
+  }
+]
