@@ -275,10 +275,20 @@ p {
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-.modal_content_box {
+.modal_frame{
   width: 100%; /* Full width */
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+
+}
+
+.modal_content_box {
+  background-color: white;
+  padding: 20px 10px;
+  border-radius: 1rem;
+  display: grid;
+  grid-auto-flow: row;
+  gap: 1rem 0;
 }
