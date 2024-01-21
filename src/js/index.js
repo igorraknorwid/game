@@ -62,50 +62,52 @@ class KeyboardRow {
 }
 
 class Modal {
-  constructor(targets, modal, close, createOrder) {
-    this.targets = targets;
-    this.modal = modal;
-    this.close = close;
-    this.createOrder = createOrder;
-    this.close.addEventListener('click', () => {
-      this.close_modal();
-    });
-    this.targets.forEach((card) => {
-      card.addEventListener('click', () => {
-        this.open_modal();
-        this.setModalContent(card);
-      });
-    });
-
-    window.onclick = function (event) {
-      if (event.target == this.modal.children[0]) {
-        this.close_modal();
-      }
-    }.bind(this);
+  constructor(content, buttonHandler) {
+    this.content = content;
+    this.buttonHandler = buttonHandler;
   }
 
-  async setModalContent(card) {
-    const id = card.dataset.product_id;
-    const data = await loadData('data/products.json');
-    const products = data.map((item, index) => {
-      return { ...item, id: index + 1 };
-    });
-    const product = products.find((item) => item.id == id);
-    this.createOrder(product, this.modal);
+  setModalContent() {
+    const contentElement = document.createElement('div');
+    contentElement.classList.add('modal_content');
+    const phrase = document.createElement('div');
+    phrase.classList.add('phrase');
+    phrase.textContent = this.content.phrase;
+    const answer = document.createElement('div');
+    answer.classList.add('answer');
+    answer.textContent = this.content.answer;
+    contentElement.appendChild(phrase);
+    contentElement.appendChild(answer);
+    return contentElement;
   }
 
-  close_modal = () => {
-    const elementsToDelete = document.querySelectorAll('.product_box');
-    // Iterate over the NodeList and remove each element
-    elementsToDelete.forEach(function (element) {
-      element.remove();
-    });
-    this.modal.style.display = 'none';
+  remove_modal = () => {
+    this.modal.remove();
   };
 
   open_modal = () => {
     this.modal.style.display = 'block';
   };
+
+  init() {
+    this.modal = document.createElement('div');
+    this.modal.classList.add('modal');
+    this.contentFrame = document.createElement('div');
+    this.contentFrame.classList.add('modal_frame');
+    this.contentBox = document.createElement('div');
+    this.contentBox.classList.add('modal_content_box');
+    const content = this.setModalContent();
+    const button = document.createElement('button');
+    button.classList.add('modal_btn');
+    button.textContent = this.content.btn_text;
+    button.addEventListener('click', this.buttonHandler);
+    button.addEventListener('click', this.remove_modal);
+    this.contentBox.appendChild(content);
+    this.contentBox.appendChild(button);
+    this.contentFrame.appendChild(this.contentBox);
+    this.modal.appendChild(this.contentFrame);
+    document.body.appendChild(this.modal);
+  }
 }
 
 class GameVisualBox {
@@ -164,10 +166,10 @@ class Gallows {
     this.getState = getState;
     this.state = this.getState();
     this.gamerMistakes = this.state.charErrorStore;
+    this.gallowsBox = document.createElement('div');
   }
 
   init() {
-    this.gallowsBox = document.createElement('div');
     this.gallowsBox.classList.add('gallows');
     this.place.appendChild(this.gallowsBox);
   }
@@ -183,10 +185,15 @@ class Gallows {
       });
     }
   };
+
+  getGallowsBox = () => {
+    return this.gallowsBox;
+  };
 }
 
 class HangmanState {
   constructor() {
+    this.playedGames = [];
     this.gamer = [
       'head',
       'body',
@@ -200,7 +207,42 @@ class HangmanState {
     this.actualChar = null;
     this.charStore = [];
     this.charErrorStore = [];
-    this.itemStore = [];
+  }
+
+  checkIsLose() {
+    if (this.charErrorStore.length === 6) {
+      const answer = this.actualGameItem.answer.toUpperCase();
+      const modal = new Modal(
+        {
+          answer,
+          btn_text: 'Try again!',
+          phrase:
+            "Don't worry, better luck next time! You'll get it next time for sure",
+        },
+        this.setNewGame
+      );
+      modal.init();
+      modal.open_modal();
+    }
+  }
+
+  checkIfWin() {
+    const answer = this.actualGameItem.answer.toUpperCase();
+    const check = answer
+      .split('')
+      .every((char) => this.charStore.includes(char));
+    if (check) {
+      const modal = new Modal(
+        {
+          answer,
+          btn_text: 'Play again!',
+          phrase: 'Your win! Congratulation!',
+        },
+        this.setNewGame
+      );
+      modal.init();
+      modal.open_modal();
+    }
   }
 
   setKeysData(data) {
@@ -225,11 +267,15 @@ class HangmanState {
     } else {
       console.log('You have this button already pushed');
     }
+    this.checkIsLose();
+    this.checkIfWin();
   };
 
   setActualGameItem(gameData, box) {
-    if (gameData && gameData.length > 0) {
-      const randomItem = gameData[Math.floor(Math.random() * gameData.length)];
+    this.gameData = gameData;
+    if (this.gameData && this.gameData.length > 0) {
+      const randomItem =
+        this.gameData[Math.floor(Math.random() * this.gameData.length)];
       this.actualGameItem = randomItem;
     }
     const visual = new GameVisualBox(this.actualGameItem, box, this.getState);
@@ -238,7 +284,33 @@ class HangmanState {
     const gallows = new Gallows(this.gamer, this.leftDiv, this.getState);
     gallows.init();
     this.hangThePlayer = gallows.hangThePlayer;
+    this.gallowsBox = gallows.getGallowsBox();
   }
+
+  setNewGame = () => {
+    this.visualBox.innerHTML = '';
+    this.gallowsBox.remove();
+    this.actualChar = null;
+    this.actualGameItem = null;
+    this.charStore.length = 0;
+    this.charErrorStore.length = 0;
+    if (this.gameData && this.gameData.length > 0) {
+      const randomItem =
+        this.gameData[Math.floor(Math.random() * this.gameData.length)];
+      this.actualGameItem = randomItem;
+    }
+    const visual = new GameVisualBox(
+      this.actualGameItem,
+      this.getVisualBox(),
+      this.getState
+    );
+    this.setQuestion = visual.setQuestion;
+    this.setQuestion();
+    const gallows = new Gallows(this.gamer, this.leftDiv, this.getState);
+    gallows.init();
+    this.hangThePlayer = gallows.hangThePlayer;
+    this.gallowsBox = gallows.getGallowsBox();
+  };
 
   getState = () => {
     return this;
@@ -298,7 +370,6 @@ async function initApp() {
   const keysData = await loadData('src/data/keys.json');
   const gameData = await loadData('src/data/game.json');
   app.setKeysData(keysData);
-  app.setActualGameItem(gameData, app.getVisualBox());
   app.setAppGrid();
   if (app.keysData) {
     const keyrows = Object.values(app.keysData);
@@ -307,6 +378,7 @@ async function initApp() {
       app.populatekeyboardBox(initRow.getRow());
     });
   }
+  app.setActualGameItem(gameData, app.getVisualBox());
 }
 
 initApp();
