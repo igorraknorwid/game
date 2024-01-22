@@ -209,6 +209,10 @@ class HangmanState {
     this.charErrorStore = [];
   }
 
+  setPlayedGames = (value) => {
+    this.playedGames.push(value);
+  };
+
   checkIsLose() {
     if (this.charErrorStore.length === 6) {
       const answer = this.actualGameItem.answer.toUpperCase();
@@ -251,7 +255,6 @@ class HangmanState {
 
   keyClickHandler = (charItem) => {
     this.actualChar = charItem;
-
     const find = this.charStore.some((item) => item === charItem.char);
     if (!find) {
       const answerArray = Array.from(this.actualGameItem.answer.toUpperCase());
@@ -285,6 +288,7 @@ class HangmanState {
     gallows.init();
     this.hangThePlayer = gallows.hangThePlayer;
     this.gallowsBox = gallows.getGallowsBox();
+    this.setPlayedGames(this.actualGameItem.id);
   }
 
   setNewGame = () => {
@@ -294,9 +298,12 @@ class HangmanState {
     this.actualGameItem = null;
     this.charStore.length = 0;
     this.charErrorStore.length = 0;
-    if (this.gameData && this.gameData.length > 0) {
+    const filteredData = this.playedGames.reduce((acc, item) => {
+      return acc.filter((value) => value.id !== item);
+    }, this.gameData);
+    if (filteredData && filteredData.length > 0) {
       const randomItem =
-        this.gameData[Math.floor(Math.random() * this.gameData.length)];
+        filteredData[Math.floor(Math.random() * filteredData.length)];
       this.actualGameItem = randomItem;
     }
     const visual = new GameVisualBox(
@@ -310,6 +317,7 @@ class HangmanState {
     gallows.init();
     this.hangThePlayer = gallows.hangThePlayer;
     this.gallowsBox = gallows.getGallowsBox();
+    this.setPlayedGames(this.actualGameItem.id);
   };
 
   getState = () => {
@@ -368,6 +376,7 @@ class HangmanApp extends HangmanState {
 async function initApp() {
   const app = new HangmanApp();
   const keysData = await loadData('src/data/keys.json');
+  this.keysData = keysData;
   const gameData = await loadData('src/data/game.json');
   app.setKeysData(keysData);
   app.setAppGrid();
@@ -378,6 +387,14 @@ async function initApp() {
       app.populatekeyboardBox(initRow.getRow());
     });
   }
+  document.addEventListener('keydown', (event) => {
+    const code = event.keyCode;
+    const charArr = Object.values(this.keysData).flat();
+    const findChar = charArr.find((item) => item.code === String(code));
+    if (findChar) {
+      app.keyClickHandler(findChar);
+    }
+  });
   app.setActualGameItem(gameData, app.getVisualBox());
 }
 
