@@ -275,13 +275,12 @@ p {
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-.modal_frame{
+.modal_frame {
   width: 100%; /* Full width */
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .modal_content_box {
@@ -291,4 +290,30 @@ p {
   display: grid;
   grid-auto-flow: row;
   gap: 1rem 0;
+}
+.gallows_box {
+  position: relative;
+}
+
+.man {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.part.last {
+  animation: appearAnimation 1s ease;
+}
+
+@keyframes appearAnimation {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
