@@ -166,22 +166,95 @@ class Gallows {
     this.getState = getState;
     this.state = this.getState();
     this.gamerMistakes = this.state.charErrorStore;
-    this.gallowsBox = document.createElement('div');
+    this.svgGallows =
+      '<svg width="353" height="581" viewBox="0 0 353 581" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+      '<rect x="176.337" y="34.6662" width="39" height="199.598" transform="rotate(45 176.337 34.6662)" fill="black" stroke="#FFFEFE" stroke-width="3"/>' +
+      '<rect x="34.5" y="1.5" width="39" height="578" rx="3.5" fill="black" stroke="#FFFEFE" stroke-width="3"/>' +
+      '<rect x="351.5" y="34.5" width="39" height="350" rx="3.5" transform="rotate(90 351.5 34.5)" fill="black" stroke="#FFFEFE" stroke-width="3"/>' +
+      '<rect x="298" y="75" width="10" height="74" fill="black"/>' +
+      '</svg>';
+    this.parts = {
+      body: {
+        svg:
+          '<svg width="5" height="131" viewBox="0 0 5 131" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+          '<rect width="5" height="131" fill="#909090"/>' +
+          '</svg>',
+        left: 300,
+        top: 240,
+      },
+
+      head: {
+        svg:
+          '<svg width="101" height="101" viewBox="0 0 101 101" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+          '<circle cx="50.5" cy="50.5" r="48" fill="white" stroke="#909090" stroke-width="5"/>' +
+          '</svg>',
+        left: 250,
+        top: 140,
+      },
+      hang_one: {
+        svg:
+          '<svg width="68" height="81" viewBox="0 0 68 81" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+          '<rect x="63.7964" width="5" height="100" transform="rotate(39.64 63.7964 0)" fill="#909090"/>' +
+          '</svg>',
+        left: 238,
+        top: 240,
+      },
+      hang_two: {
+        svg:
+          '<svg width="68" height="81" viewBox="0 0 68 81" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+          '<rect y="3.18951" width="5" height="100" transform="rotate(-39.6353 0 3.18951)" fill="#909090"/>' +
+          '</svg>',
+        left: 300,
+        top: 240,
+      },
+
+      leg_one: {
+        svg:
+          '<svg width="68" height="81" viewBox="0 0 68 81" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+          '<rect x="63.7964" width="5" height="100" transform="rotate(39.64 63.7964 0)" fill="#909090"/>' +
+          '</svg>',
+        left: 238,
+        top: 365,
+      },
+
+      leg_two: {
+        svg:
+          '<svg width="68" height="81" viewBox="0 0 68 81" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+          '<rect y="3.18951" width="5" height="100" transform="rotate(-39.6353 0 3.18951)" fill="#909090"/>' +
+          '</svg>',
+        left: 300,
+        top: 365,
+      },
+    };
   }
 
   init() {
-    this.gallowsBox.classList.add('gallows');
+    this.gallowsBox = document.createElement('div');
+    this.gallows = document.createElement('div');
+    this.gallows.classList.add('gallows');
+    this.gallows.innerHTML = this.svgGallows;
+    this.gallowsBox.classList.add('gallows_box');
+    this.manBox = document.createElement('div');
+    this.manBox.classList.add('man');
+    this.gallowsBox.appendChild(this.gallows);
+    this.gallowsBox.appendChild(this.manBox);
     this.place.appendChild(this.gallowsBox);
   }
 
   hangThePlayer = () => {
-    this.gallowsBox.innerHTML = '';
+    this.manBox.innerHTML = '';
     if (this.gamerMistakes.length < 7) {
       this.gamerMistakes.forEach((_, index) => {
         const part = document.createElement('div');
         part.classList.add('part');
-        part.textContent = this.gamer[index];
-        this.gallowsBox.appendChild(part);
+        if (index === this.gamerMistakes.length - 1) {
+          part.classList.add('last');
+        }
+        part.innerHTML = this.parts[this.gamer[index]].svg;
+        part.style.position = 'absolute';
+        part.style.left = `${this.parts[this.gamer[index]].left}px`;
+        part.style.top = `${this.parts[this.gamer[index]].top}px`;
+        this.manBox.appendChild(part);
       });
     }
   };
@@ -194,14 +267,7 @@ class Gallows {
 class HangmanState {
   constructor() {
     this.playedGames = [];
-    this.gamer = [
-      'head',
-      'body',
-      'left arm',
-      'right arm',
-      'left leg',
-      'right leg',
-    ];
+    this.gamer = ['head', 'body', 'hang_one', 'hang_two', 'leg_one', 'leg_two'];
     this.keysData = null;
     this.actualGameItem = null;
     this.actualChar = null;
@@ -226,7 +292,8 @@ class HangmanState {
         this.setNewGame
       );
       modal.init();
-      modal.open_modal();
+      setTimeout(modal.open_modal, 2000);
+      // modal.open_modal();
     }
   }
 
