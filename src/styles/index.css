@@ -1,4 +1,4 @@
-/* Basic CSS Reset */
+
 html,
 body,
 div,
@@ -315,5 +315,32 @@ p {
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+.letters {
+  width: fit-content;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0 0.5rem;
+  margin: 5rem auto;
+}
+.letter {
+  padding: 6px 10px;
+  font-size: 4rem;
+  background-color: lightgrey;
+  border-radius: 0.5rem;
+}
+.letter.active {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    background-color: lightgrey;
+  }
+  50% {
+    background-color: red;
   }
 }
