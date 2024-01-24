@@ -20,6 +20,24 @@ class KeyboardKey {
         this.clickHandler(this.item, this.key);
       });
     }
+
+    this.key.addEventListener('mouseover', () => {
+      const letters = document.querySelectorAll('.letter');
+      letters.forEach((letter) => {
+        const text = letter.textContent;
+        letter.classList.remove('active');
+        if (text === item.char) {
+          letter.classList.add('active');
+        }
+      });
+    });
+
+    this.key.addEventListener('mouseout', () => {
+      const letters = document.querySelectorAll('.letter');
+      letters.forEach((letter) => {
+        letter.classList.remove('active');
+      });
+    });
   }
 
   createKey = () => {
@@ -33,25 +51,20 @@ class KeyboardKey {
   };
 }
 
-class KeyboardRow {
-  constructor(rowData, rowNumber, keyClickHandler = null) {
+class Keyboard {
+  constructor(data, getState, keyClickHandler = null) {
+    this.state = getState();
+    this.data = data;
     this.keyClickHandler = null;
     if (keyClickHandler) {
       this.keyClickHandler = keyClickHandler;
     }
-    this.rowData = rowData;
-    this.rowNumber = rowNumber;
-    this.setRow(this.rowNumber);
-    this.rowData.forEach(this.renderKey);
   }
 
   setRow = (rowNumber) => {
     this.row = document.createElement('div');
     this.row.classList.add(`row`);
     this.row.classList.add(rowNumber);
-  };
-
-  getRow = () => {
     return this.row;
   };
 
@@ -59,6 +72,68 @@ class KeyboardRow {
     const key = new KeyboardKey(item, this.keyClickHandler);
     this.row.appendChild(key.getKey());
   };
+
+  init() {
+    const keyrows = Object.values(this.data);
+    if (keyrows) {
+      keyrows.forEach((row, index) => {
+        const keyrow = this.setRow(index);
+        row.forEach((item) => {
+          const initKey = new KeyboardKey(item, this.state.keyClickHandler);
+          const key = initKey.getKey();
+          keyrow.appendChild(key);
+        });
+        this.state.keyboardBox.appendChild(keyrow);
+      });
+    }
+  }
+}
+
+class UseState {
+  constructor(getState) {
+    this.state = getState();
+  }
+
+  getState() {
+    return this.state;
+  }
+}
+
+class UsedLeters extends UseState {
+  constructor(getState, place) {
+    super(getState);
+    this.place = place;
+  }
+
+  init() {
+    this.box = document.createElement('div');
+    this.box.classList.add('letters');
+    this.place.appendChild(this.box);
+    this.previousChar = null;
+  }
+
+  render() {
+    this.box.innerHTML = '';
+    const letters = [...this.state.charStore];
+    letters.forEach((letter, index) => {
+      const letterBox = document.createElement('div');
+      letterBox.classList.add('letter');
+      if (
+        (this.state.actualChar.char === letter && index < letters.length - 1) ||
+        (this.previousChar === this.state.actualChar.char &&
+          index === letters.length - 1)
+      ) {
+        letterBox.classList.add('active');
+      }
+      letterBox.textContent = letter;
+      this.box.appendChild(letterBox);
+    });
+    this.previousChar = this.state.actualChar.char;
+  }
+
+  clean() {
+    this.box.innerHTML = '';
+  }
 }
 
 class Modal {
@@ -266,6 +341,7 @@ class Gallows {
 
 class HangmanState {
   constructor() {
+    this.data = {};
     this.playedGames = [];
     this.gamer = ['head', 'body', 'hang_one', 'hang_two', 'leg_one', 'leg_two'];
     this.keysData = null;
@@ -273,6 +349,15 @@ class HangmanState {
     this.actualChar = null;
     this.charStore = [];
     this.charErrorStore = [];
+    this.isModalOpen = false;
+  }
+
+  setData(data, key) {
+    this.data[key] = data;
+  }
+
+  setIsModalOpen() {
+    this.isModalOpen = true;
   }
 
   setPlayedGames = (value) => {
@@ -280,7 +365,8 @@ class HangmanState {
   };
 
   checkIsLose() {
-    if (this.charErrorStore.length === 6) {
+    if (this.charErrorStore.length === 6 && !this.isModalOpen) {
+      this.setIsModalOpen();
       const answer = this.actualGameItem.answer.toUpperCase();
       const modal = new Modal(
         {
@@ -292,8 +378,7 @@ class HangmanState {
         this.setNewGame
       );
       modal.init();
-      setTimeout(modal.open_modal, 2000);
-      // modal.open_modal();
+      setTimeout(modal.open_modal, 1200);
     }
   }
 
@@ -328,15 +413,14 @@ class HangmanState {
       const findCharInAnswer = answerArray.find(
         (char) => char === charItem.char
       );
-      if (!findCharInAnswer) {
+      if (!findCharInAnswer && this.charErrorStore.length < 6) {
         this.charErrorStore.push(charItem.char);
         this.hangThePlayer();
       }
       this.charStore.push(charItem.char);
       this.setQuestion();
-    } else {
-      console.log('You have this button already pushed');
     }
+    this.letters.render();
     this.checkIsLose();
     this.checkIfWin();
   };
@@ -385,6 +469,7 @@ class HangmanState {
     this.hangThePlayer = gallows.hangThePlayer;
     this.gallowsBox = gallows.getGallowsBox();
     this.setPlayedGames(this.actualGameItem.id);
+    this.letters.clean();
   };
 
   getState = () => {
@@ -438,31 +523,31 @@ class HangmanApp extends HangmanState {
   getLeftDiv() {
     return this.leftDiv;
   }
-}
 
-async function initApp() {
-  const app = new HangmanApp();
-  const keysData = await loadData('src/data/keys.json');
-  this.keysData = keysData;
-  const gameData = await loadData('src/data/game.json');
-  app.setKeysData(keysData);
-  app.setAppGrid();
-  if (app.keysData) {
-    const keyrows = Object.values(app.keysData);
-    keyrows.forEach((row, index) => {
-      const initRow = new KeyboardRow(row, index, app.keyClickHandler);
-      app.populatekeyboardBox(initRow.getRow());
+  async init() {
+    this.setAppGrid();
+    const gameData = await loadData('src/data/game.json');
+    this.setActualGameItem(gameData, this.getVisualBox());
+    document.addEventListener('keydown', (event) => {
+      const code = event.keyCode;
+      const charArr = Object.values(this.keysData).flat();
+      const findChar = charArr.find((item) => item.code === String(code));
+      if (findChar) {
+        this.keyClickHandler(findChar);
+      }
     });
+    const keysData = await loadData('src/data/keys.json');
+    this.setKeysData(keysData);
+    const keyboard = new Keyboard(
+      keysData,
+      this.getState,
+      this.keyClickHandler
+    );
+    keyboard.init();
+    this.letters = new UsedLeters(this.getState, this.rightDiv);
+    this.letters.init();
   }
-  document.addEventListener('keydown', (event) => {
-    const code = event.keyCode;
-    const charArr = Object.values(this.keysData).flat();
-    const findChar = charArr.find((item) => item.code === String(code));
-    if (findChar) {
-      app.keyClickHandler(findChar);
-    }
-  });
-  app.setActualGameItem(gameData, app.getVisualBox());
 }
 
-initApp();
+const app = new HangmanApp();
+app.init();
