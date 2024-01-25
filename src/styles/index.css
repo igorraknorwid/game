@@ -385,11 +385,11 @@ p {
 .gallows_box {
   position: relative;
 }
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
   .left {
     transform: scale(0.5);
   }
-} */
+} 
 
 .man {
   position: absolute;
