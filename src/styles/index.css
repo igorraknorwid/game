@@ -273,7 +273,7 @@ p {
 
 @media (min-width: 768px) {
   .key {
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 0.6rem 1.2rem;
     border-radius: 0.5rem;
     transition: all 0.3s ease-in-out;
@@ -285,8 +285,8 @@ p {
 
 @media (min-width: 1200px) {
   .key {
-    font-size: 2rem;
-    padding: 0.8rem 1.8rem;
+    font-size: 1.6rem;
+    padding: 0.8rem 1.5rem;
     border-radius: 0.5rem;
   }
 }
@@ -366,6 +366,7 @@ p {
   cursor: pointer;
 }
 
+/* Primary Button Styles */
 .modal_btn {
   background-color: #3498db;
   color: #fff;
@@ -384,7 +385,11 @@ p {
 .gallows_box {
   position: relative;
 }
-
+/* @media (max-width: 768px) {
+  .left {
+    transform: scale(0.5);
+  }
+} */
 
 .man {
   position: absolute;
@@ -416,4 +421,22 @@ p {
   gap: 0 0.5rem;
   margin: 5rem auto;
 }
+/* .letter {
+  padding: 6px 10px;
+  font-size: 4rem;
+  background-color: lightgrey;
+  border-radius: 0.5rem;
+}
+.letter.active {
+  animation: pulse 1.2s ease-in-out infinite;
+}
 
+@keyframes pulse {
+  0%,
+  100% {
+    background-color: lightgrey;
+  }
+  50% {
+    background-color: red;
+  }
+} */
