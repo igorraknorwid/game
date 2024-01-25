@@ -213,6 +213,7 @@ p {
 @media (min-width: 1200px) {
   .row {
     gap: 1rem 1.5rem;
+    flex-wrap: nowrap;
   }
 }
 
