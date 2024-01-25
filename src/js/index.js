@@ -99,43 +99,6 @@ class UseState {
   }
 }
 
-class UsedLeters extends UseState {
-  constructor(getState, place) {
-    super(getState);
-    this.place = place;
-  }
-
-  init() {
-    this.box = document.createElement('div');
-    this.box.classList.add('letters');
-    this.place.appendChild(this.box);
-    this.previousChar = null;
-  }
-
-  render() {
-    this.box.innerHTML = '';
-    const letters = [...this.state.charStore];
-    letters.forEach((letter, index) => {
-      const letterBox = document.createElement('div');
-      letterBox.classList.add('letter');
-      if (
-        (this.state.actualChar.char === letter && index < letters.length - 1) ||
-        (this.previousChar === this.state.actualChar.char &&
-          index === letters.length - 1)
-      ) {
-        letterBox.classList.add('active');
-      }
-      letterBox.textContent = letter;
-      this.box.appendChild(letterBox);
-    });
-    this.previousChar = this.state.actualChar.char;
-  }
-
-  clean() {
-    this.box.innerHTML = '';
-  }
-}
-
 class Modal {
   constructor(content, buttonHandler) {
     this.content = content;
@@ -151,8 +114,8 @@ class Modal {
     const answer = document.createElement('div');
     answer.classList.add('answer');
     answer.textContent = this.content.answer;
-    contentElement.appendChild(phrase);
     contentElement.appendChild(answer);
+    contentElement.appendChild(phrase);
     return contentElement;
   }
 
@@ -349,15 +312,10 @@ class HangmanState {
     this.actualChar = null;
     this.charStore = [];
     this.charErrorStore = [];
-    this.isModalOpen = false;
   }
 
   setData(data, key) {
     this.data[key] = data;
-  }
-
-  setIsModalOpen() {
-    this.isModalOpen = true;
   }
 
   setPlayedGames = (value) => {
@@ -365,8 +323,7 @@ class HangmanState {
   };
 
   checkIsLose() {
-    if (this.charErrorStore.length === 6 && !this.isModalOpen) {
-      this.setIsModalOpen();
+    if (this.charErrorStore.length === 6) {
       const answer = this.actualGameItem.answer.toUpperCase();
       const modal = new Modal(
         {
@@ -378,7 +335,7 @@ class HangmanState {
         this.setNewGame
       );
       modal.init();
-      setTimeout(modal.open_modal, 1200);
+      setTimeout(modal.open_modal, 600);
     }
   }
 
@@ -401,6 +358,29 @@ class HangmanState {
     }
   }
 
+  rerenderKeys() {
+    const keys = document.querySelectorAll('.key');
+    keys.forEach((key) => {
+      const find = this.charStore.some((item) => item === key.textContent);
+      if (find) {
+        key.classList.add('used');
+      }
+    });
+  }
+
+  cleanKeys() {
+    this.keys = document.querySelectorAll('.key');
+    this.keys.forEach((key) => {
+      key.classList.remove('used');
+    });
+  }
+
+  startSideEffects() {
+    this.rerenderKeys();
+    this.checkIsLose();
+    this.checkIfWin();
+  }
+
   setKeysData(data) {
     this.keysData = data;
   }
@@ -408,7 +388,7 @@ class HangmanState {
   keyClickHandler = (charItem) => {
     this.actualChar = charItem;
     const find = this.charStore.some((item) => item === charItem.char);
-    if (!find) {
+    if (!find && this.charErrorStore.length < 6) {
       const answerArray = Array.from(this.actualGameItem.answer.toUpperCase());
       const findCharInAnswer = answerArray.find(
         (char) => char === charItem.char
@@ -420,9 +400,7 @@ class HangmanState {
       this.charStore.push(charItem.char);
       this.setQuestion();
     }
-    this.letters.render();
-    this.checkIsLose();
-    this.checkIfWin();
+    this.startSideEffects();
   };
 
   setActualGameItem(gameData, box) {
@@ -469,7 +447,7 @@ class HangmanState {
     this.hangThePlayer = gallows.hangThePlayer;
     this.gallowsBox = gallows.getGallowsBox();
     this.setPlayedGames(this.actualGameItem.id);
-    this.letters.clean();
+    this.cleanKeys();
   };
 
   getState = () => {
@@ -482,32 +460,23 @@ class HangmanApp extends HangmanState {
     super();
     this.container = document.createElement('section');
     this.appBox = document.createElement('div');
-    this.headerDiv = document.createElement('div');
-    this.mainDiv = document.createElement('div');
     this.leftDiv = document.createElement('div');
     this.rightDiv = document.createElement('div');
     this.keyboardBox = document.createElement('div');
     this.visualBox = document.createElement('div');
-    this.footerDiv = document.createElement('div');
   }
 
   setAppGrid = () => {
     this.container.className = 'container';
     this.appBox.className = 'app';
-    this.headerDiv.className = 'header';
-    this.mainDiv.className = 'main';
     this.leftDiv.className = 'left';
     this.rightDiv.className = 'right';
-    this.footerDiv.className = 'footer';
     this.keyboardBox.className = 'keyboard';
     this.visualBox.className = 'visual';
-    this.mainDiv.appendChild(this.leftDiv);
-    this.mainDiv.appendChild(this.rightDiv);
+    this.appBox.appendChild(this.leftDiv);
+    this.appBox.appendChild(this.rightDiv);
     this.rightDiv.appendChild(this.visualBox);
     this.rightDiv.appendChild(this.keyboardBox);
-    this.appBox.appendChild(this.headerDiv);
-    this.appBox.appendChild(this.mainDiv);
-    this.appBox.appendChild(this.footerDiv);
     this.container.insertAdjacentElement('afterbegin', this.appBox);
     document.body.insertAdjacentElement('afterbegin', this.container);
   };
@@ -544,8 +513,6 @@ class HangmanApp extends HangmanState {
       this.keyClickHandler
     );
     keyboard.init();
-    this.letters = new UsedLeters(this.getState, this.rightDiv);
-    this.letters.init();
   }
 }
 
